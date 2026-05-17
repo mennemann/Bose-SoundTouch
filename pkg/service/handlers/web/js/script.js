@@ -509,6 +509,7 @@ function openTab(evt, tabId) {
 
     if (evt) {
         evt.currentTarget.className += " active";
+        history.pushState(null, '', '#' + tabId);
     } else {
         // Find the button that corresponds to the tabId and activate it
         for (let i = 0; i < tablinks.length; i++) {
@@ -520,6 +521,13 @@ function openTab(evt, tabId) {
         }
     }
 }
+
+window.addEventListener('popstate', function() {
+    const tabId = window.location.hash.slice(1);
+    if (tabId && document.getElementById(tabId)) {
+        openTab(null, tabId);
+    }
+});
 
 function getDeviceDisplayName(deviceId) {
     if (!deviceId) return "Unknown Device";
@@ -1554,6 +1562,11 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchDevices();
     triggerDiscovery();
     fetchVersion();
+
+    const hash = window.location.hash.slice(1);
+    if (hash && document.getElementById(hash)) {
+        openTab(null, hash);
+    }
 
     const syncBtn = document.getElementById("sync-now-btn");
     if (syncBtn) syncBtn.onclick = startSync;
