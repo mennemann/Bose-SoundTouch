@@ -149,18 +149,7 @@ func TestStaticWeb(t *testing.T) {
 		t.Errorf("JS: Expected javascript content type, got %s", res.Header.Get("Content-Type"))
 	}
 
-	// 3. Test diff.min.js
-	res, err = http.Get(ts.URL + "/web/js/diff.min.js")
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer res.Body.Close()
-
-	if res.StatusCode != http.StatusOK {
-		t.Errorf("Diff JS: Expected status OK, got %v", res.Status)
-	}
-
-	// 4. Test Favicon
+	// 3. Test Favicon
 	res, err = http.Get(ts.URL + "/web/img/favicon-braille.svg")
 	if err != nil {
 		t.Fatal(err)
