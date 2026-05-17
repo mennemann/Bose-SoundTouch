@@ -106,3 +106,8 @@ stockholm/
 
 # Stockholm source zip — large binary, place manually at stockholm_zip/stockholm.zip
 stockholm_zip/*.zip
+
+# Local working-tree notes — running pickup-here log (NEXT) + archive of
+# resolved items (DONE). Both are session-local scratch, not project docs.
+NEXT.md
+DONE.md
