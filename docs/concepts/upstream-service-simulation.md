@@ -95,13 +95,11 @@ data/
   "migration_status": {
     "started_at": "2024-01-18T09:00:00Z",
     "devices_migrated": 1,
-    "devices_pending": 2,
-    "mirror_active": true
+    "devices_pending": 2
   },
   "bose_account_id": "bose-original-id",
   "data_sources": {
     "local": true,
-    "bose_mirror": true,
     "primary": "bose"
   }
 }
@@ -144,7 +142,7 @@ data/
   },
   "data_sources": {
     "presets": "local",
-    "recents": "mirror_primary", 
+    "recents": "local",
     "sources": "local"
   },
   "migration": {
@@ -165,7 +163,6 @@ data/
 2024-01-20T16:15:00Z|now_playing|websocket|{"source":"SPOTIFY","track":"Song Name","artist":"Artist Name"}
 2024-01-20T16:15:30Z|volume_changed|websocket|{"volume":45,"muted":false}
 2024-01-20T16:16:00Z|preset_selected|websocket|{"preset":1,"source":"SPOTIFY","location":"spotify:track:123"}
-2024-01-20T16:18:00Z|disparity_detected|mirror|{"endpoint":"/v1/account/full","local_hash":"abc123","upstream_hash":"def456"}
 2024-01-20T16:20:00Z|device_online|discovery|{"ip":"192.0.2.100","method":"mdns"}
 ```
 

@@ -37,9 +37,8 @@ This document summarizes the improvements made to the **Marge service** to impro
     *   **Device Identity**: Added `<serialNumber>` and `<updatedOn>` to both the top-level `<device>` and its `<attachedProduct>`, ensuring consistent device identification.
     *   **Field-Level Parity**: Mapped missing fields like `<contentItemType>` and `<productlabel>` to match upstream expectations.
     *   **Improved Source Matching**: Enhanced internal logic to correctly link presets and recents to their configured sources based on multiple identifiers (ID, Key, or Type).
-*   **Verified Parity Mismatch Fixes**: Comprehensive reproduction tests (`TestParityMismatchReproduction_V2` and `TestParityMismatchReproduction_V3`) now confirm parity for identified mismatches in `POST /recent` and `GET /recents`, including credentials and source-specific metadata.
+*   **Verified Parity Mismatch Fixes**: The reproduction test `TestParityMismatchReproduction_V2` confirms parity for identified mismatches in `POST /recent` and `GET /recents`, including credentials and source-specific metadata.
 *   **Unified Response Logic**: Refactored the code so that both `POST /recent` and `GET /recents` use the same formatting functions, guaranteeing consistency.
-*   **Robust Parity Detection**: Updated the local parity checker to be whitespace-insensitive for XML bodies, significantly reducing noise from minor indentation or newline differences.
 *   **Maintainable XML Generation**: Reduced cyclomatic complexity and code duplication in `marge.go` by extracting focused helper functions for mapping internal data to response-specific XML models.
 
 ---

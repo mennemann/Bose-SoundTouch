@@ -22,7 +22,6 @@
 │                    SoundTouch Service                       │
 ├─────────────────────────────────────────────────────────────┤
 │  HTTP Router & Middleware                                   │
-│  ├── Mirror Middleware (Enhanced)                           │
 │  ├── Recorder Middleware                                    │
 │  ├── Disparity Detection                                    │
 │  └── Health Check Middleware                               │
@@ -35,12 +34,11 @@
 ├─────────────────────────────────────────────────────────────┤
 │  Data Layer                                                 │
 │  ├── Enhanced DataStore      ├── Event Store              │
-│  ├── Mirror Cache           ├── Metrics Store             │
 │  └── Configuration Store    └── Session Store             │
 ├─────────────────────────────────────────────────────────────┤
 │  External Integrations                                      │
-│  ├── Bose Services (Mirror)  ├── Device Discovery         │
-│  ├── BMX/TuneIn Services    └── SSH/Setup Manager         │
+│  ├── Device Discovery         ├── BMX/TuneIn Services      │
+│  └── SSH/Setup Manager                                   │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -69,10 +67,6 @@ pkg/service/
 │   ├── processor.go
 │   ├── queue.go
 │   └── storage.go
-├── mirror/               # Enhanced mirroring (extends existing)
-│   ├── disparity.go
-│   ├── analyzer.go
-│   └── logger.go
 ├── health/               # System monitoring
 │   ├── monitor.go
 │   ├── metrics.go
@@ -115,20 +109,17 @@ type MigrationInfo struct {
     CompletedAt      *time.Time `json:"completed_at,omitempty"`
     DevicesMigrated  int       `json:"devices_migrated"`
     DevicesPending   int       `json:"devices_pending"`
-    MirrorActive     bool      `json:"mirror_active"`
     Strategy         string    `json:"strategy"`
     RollbackData     string    `json:"rollback_data,omitempty"`
 }
 
 type DataSourceConfig struct {
     Local       bool   `json:"local"`
-    BoseMirror  bool   `json:"bose_mirror"`
     Primary     string `json:"primary"` // "local" or "bose"
 }
 
 type AccountSettings struct {
     AutoMigration    bool     `json:"auto_migration"`
-    MirrorEndpoints  []string `json:"mirror_endpoints"`
     RetentionDays    int      `json:"retention_days"`
 }
 ```
@@ -235,7 +226,6 @@ type EventSource string
 const (
     EventSourceWebSocket  EventSource = "websocket"
     EventSourceDiscovery  EventSource = "discovery"
-    EventSourceMirror     EventSource = "mirror"
     EventSourceSystem     EventSource = "system"
     EventSourceAPI        EventSource = "api"
     EventSourceUser       EventSource = "user"
@@ -336,12 +326,10 @@ Response: 200 OK
   "migration_info": {
     "started_at": "2024-01-18T09:00:00Z",
     "devices_migrated": 1,
-    "devices_pending": 1,
-    "mirror_active": true
+    "devices_pending": 1
   },
   "data_sources": {
     "local": true,
-    "bose_mirror": true,
     "primary": "bose"
   }
 }
@@ -474,8 +462,7 @@ Response: 200 OK
   "services": {
     "account_manager": "healthy",
     "lifecycle_manager": "healthy",
-    "event_processor": "healthy",
-    "mirror_service": "warning"
+    "event_processor": "healthy"
   },
   "statistics": {
     "total_accounts": 5,
@@ -534,18 +521,15 @@ Response: 200 OK
     "started_at": "2024-01-18T09:00:00Z",
     "devices_migrated": 1,
     "devices_pending": 1,
-    "mirror_active": true,
     "strategy": "gradual"
   },
   "bose_account_id": "bose-original-id",
   "data_sources": {
     "local": true,
-    "bose_mirror": true,
     "primary": "bose"
   },
   "settings": {
     "auto_migration": false,
-    "mirror_endpoints": ["/v1/presets", "/v1/recents"],
     "retention_days": 30
   }
 }
@@ -593,7 +577,7 @@ Response: 200 OK
   },
   "data_sources": {
     "presets": "local",
-    "recents": "mirror_primary",
+    "recents": "local",
     "sources": "local"
   },
   "migration": {
@@ -622,7 +606,6 @@ Response: 200 OK
 2024-01-20T15:30:00.123Z|evt_12345|now_playing|websocket|{"source":"SPOTIFY","track":"Song Name","artist":"Artist Name","album":"Album Name"}
 2024-01-20T15:30:30.456Z|evt_12346|volume_changed|websocket|{"volume":45,"muted":false,"previous_volume":40}
 2024-01-20T15:31:00.789Z|evt_12347|preset_selected|websocket|{"preset":1,"source":"SPOTIFY","location":"spotify:track:123abc"}
-2024-01-20T15:31:15.012Z|evt_12348|disparity_detected|mirror|{"endpoint":"/v1/presets","local_hash":"abc123","upstream_hash":"def456","severity":"medium"}
 2024-01-20T15:32:00.345Z|evt_12349|health_check|system|{"response_time":42,"status":"healthy","connectivity":"online"}
 ```
 
@@ -852,7 +835,6 @@ go test -bench=. ./...
 
 ### Response Time Targets
 - Local API requests: < 100ms (95th percentile)
-- Mirror requests: < 200ms overhead (asynchronous)
 - Discovery time: < 5s for network scan
 
 ### Resource Constraints
