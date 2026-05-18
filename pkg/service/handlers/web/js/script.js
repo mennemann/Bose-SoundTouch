@@ -1743,7 +1743,10 @@ async function showSummary(deviceId) {
         document.getElementById("migration-summary").style.display = "none";
         return;
     }
-    history.pushState(null, '', '#tab-migration?' + deviceId);
+    const newHash = '#tab-migration?' + deviceId;
+    if (window.location.hash !== newHash) {
+        history.pushState(null, '', newHash);
+    }
     const targetUrl = document.getElementById("target-domain").value;
 
     // Per-field URL overrides (Plan card). The summary endpoint uses
