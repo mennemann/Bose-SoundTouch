@@ -50,9 +50,6 @@ make build-service
 
 Service listens on `:8000` by default. Web UI: `http://localhost:8000`
 
-> To also enable mirror mode (forward unhandled requests to official Bose servers
-> for comparison), add: `--mirror-enabled --mirror-endpoints /streaming/`
-
 ---
 
 ## Step 2 — Start mitmproxy + Frida (new capture)
@@ -236,9 +233,6 @@ Endpoints the service doesn't handle return `404 Not Found`. Check:
 ```bash
 # From service stats
 curl -s http://localhost:8000/setup/interaction-stats | python3 -m json.tool
-
-# List parity mismatches (local vs upstream divergence, if mirror enabled)
-curl -s http://localhost:8000/setup/parity-mismatches | python3 -m json.tool
 ```
 
 ---
@@ -298,8 +292,6 @@ Settings applied in the web UI before migration:
 | Target Domain       | `soundtouch.local` (resolvable from speaker to `192.168.x.z`)       |
 | DNS Discovery       | enabled                                                             |
 | Upstream DNS        | home Wi-Fi gateway                                                  |
-| Mirroring           | enabled (for tracing while Bose cloud is still up)                  |
-| Mirrored endpoints  | `/bmx/*`, `/streaming/*`, `/accounts/*`, `/v1/scmudc/*`, `/oauth/*` |
 | Proxy logging       | enabled, including bodies                                           |
 | Record interactions | enabled                                                             |
 | Skip recording      | `/setup/*`, `/web/*`                                                |
@@ -361,7 +353,6 @@ All tests run from the **Devices → Migrate** panel after selecting the speaker
 
 - Paired speaker to Bose account via app — succeeded ✅
 - Set presets via app — worked ✅
-- Mirroring active and functional during session ✅
 - No visible errors in app behaviour; service logs and interaction recordings not yet reviewed in detail
 
 ### Known Shell Warning (safe to ignore)

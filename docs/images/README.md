@@ -6,7 +6,7 @@ Screenshots and diagrams referenced by the documentation.
 
 | File | Shows | Used in |
 |------|-------|---------|
-| `ui-settings.png` | AfterTouch web UI — Settings tab (Target Domain, DNS Discovery, Mirroring) | Migration Guide |
+| `ui-settings.png` | AfterTouch web UI — Settings tab (Target Domain, DNS Discovery) | Migration Guide |
 | `ui-devices.png` | AfterTouch web UI — Devices tab (discovered speakers with Sync/Migrate actions) | Migration Guide |
 | `ui-sync.png` | AfterTouch web UI — Data Sync tab (successful sync result) | Migration Guide |
 | `ui-migration.png` | AfterTouch web UI — Migration tab (HTTPS test, DNS test, method selector) | Migration Guide |
